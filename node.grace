@@ -1,6 +1,10 @@
+import "nullNode" as _nullNode
+
 factory method named(name) withKey(key') andValue(value') containingInSubtree(n') {
-  var left is public := false
-  var right is public := false
+  def nullNode = _nullNode.named("Null node")
+  
+  var left is public := nullNode
+  var right is public := nullNode
   
   var key is public := key'
   var value is public := value'

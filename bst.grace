@@ -1,7 +1,7 @@
-import "node" as _node 
+import "node" as _node
+import "nullNode" as _nullNode
 
 factory method named(name) {
-  var root := false
   
   method size() {
     sizeOfNode(root)
@@ -20,15 +20,19 @@ factory method named(name) {
   }
   
   //
-  // Helpers
+  // Confidential
   //
+  def nullNode = _nullNode.named("Null node")
+  
+  var root := nullNode
+  
   method sizeOfNode(node) is confidential {
-    if (node == false) then { 0 }
+    if (node.asString == "Null node") then { 0 }
     else { node.n }
   }
   
   method on(node) at(key) put(value) is confidential {
-    if (node == false) then {
+    if (node.asString == "Null node") then {
       return _node.named("anotherNode") withKey(key) andValue(value) containingInSubtree(1)
     }
     if (key < node.key) then {
@@ -43,10 +47,9 @@ factory method named(name) {
   }
 
   method on(node) at(key) is confidential {
-    if (node == false) then {
+    if (node.asString == "Null node") then {
       NoSuchObject.raise "key not found: {key}"
     }
-    var cmp := key.compare(node.key)
     if (key < node.key) then {
       return on(node.left) at(key)
     } elseif (key > node.key) then {
