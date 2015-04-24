@@ -22,3 +22,15 @@ if (dict.at("george") == "washington") then {
 if (dict.at("thomas") == "jefferson") then { 
   print ("Okay") } else { print ("Error!") }
   
+// values()
+dict.at("john") put("adams")
+dict.at("james") put("madison")
+dict.at("abraham") put("lincoln")
+dict.at("andrew") put("jackson")
+
+var values := dict.values
+
+print ("\n\nValues:\n\n")
+while { values.hasNext } do {
+  print (values.next)
+}

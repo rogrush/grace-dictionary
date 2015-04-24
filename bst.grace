@@ -19,6 +19,10 @@ factory method named(name) {
     on(root) at(key)
   }
   
+  method values() {
+    iterator
+  }
+  
   //
   // Confidential
   //
@@ -56,6 +60,47 @@ factory method named(name) {
       return on(node.right) at(key)
     } else {
       return node.value
+    }
+  }
+  
+  method iterator() is confidential {
+    object {
+      
+      method next() {
+        buildListIfNeeded
+        if (valueList.size == 0) then {
+          Exhausted.raise "No more elements in iterator: { self }"
+        }
+        valueList.pop()
+      }
+      
+      method hasNext() {
+        buildListIfNeeded
+        valueList.size != 0
+      }
+      
+      //
+      // Confidential
+      //
+      var valueList := list.empty
+      var isListBuilt := false
+      
+      method buildList(node) is confidential {
+        if (node.asString == "Null node") then { 
+          return
+        }
+        valueList.push(node.value)
+        buildList(node.left)
+        buildList(node.right)
+      }
+      
+      method buildListIfNeeded() is confidential {
+        // Build list on first method call
+        if (isListBuilt == false) then {
+          buildList(root)
+          isListBuilt := true
+        }
+      }
     }
   }
 }
