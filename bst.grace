@@ -2,7 +2,20 @@ import "node" as _node
 import "nullNode" as _nullNode
 
 factory method named(name) {
+  //
+  // CollectionFactory type
+  //
   
+  //
+  // Enumerable type 
+  //
+  method iterator() {
+    makeIterator("values")
+  }
+  
+  //
+  // Dictionary type
+  //
   method size() {
     sizeOfNode(root)
   }
@@ -18,9 +31,17 @@ factory method named(name) {
   method at(key) {
     on(root) at(key)
   }
+
+  method keys() {
+    makeIterator("keys")
+  }
   
   method values() {
-    iterator
+    makeIterator("values")
+  }  
+  
+  method bindings() {
+    makeIterator("bindings")
   }
   
   //
@@ -63,33 +84,40 @@ factory method named(name) {
     }
   }
   
-  method iterator() is confidential {
+  method makeIterator(iterateOverWhich) is confidential {
     object {
       
       method next() {
         buildListIfNeeded
-        if (valueList.size == 0) then {
+        if (internalList.size == 0) then {
           Exhausted.raise "No more elements in iterator: { self }"
         }
-        valueList.pop()
+        internalList.pop()
       }
       
       method hasNext() {
         buildListIfNeeded
-        valueList.size != 0
+        internalList.size != 0
       }
       
       //
       // Confidential
       //
-      var valueList := list.empty
+      var internalList := list.empty
       var isListBuilt := false
       
       method buildList(node) is confidential {
         if (node.asString == "Null node") then { 
           return
         }
-        valueList.push(node.value)
+        // Iterate over keys, values, or bindings
+        if (iterateOverWhich == "keys") then {
+          internalList.push(node.key)
+        } elseif (iterateOverWhich == "values") then {
+          internalList.push(node.value)
+        } else {
+          internalList.push(node.key::node.value)
+        }
         buildList(node.left)
         buildList(node.right)
       }

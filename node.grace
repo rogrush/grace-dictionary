@@ -11,6 +11,8 @@ factory method named(name) withKey(key') andValue(value') containingInSubtree(n'
   var n is public := n'
 
   method asString() {
-    print ("key: {key}\nvalue: {value}\nnodes in subtree: {n}")
+//    Suppressed to avoid printing which is apparently a side effect of some 
+//    other operation
+//    print ("key: {key}\nvalue: {value}\nnodes in subtree: {n}")
   }
 }
